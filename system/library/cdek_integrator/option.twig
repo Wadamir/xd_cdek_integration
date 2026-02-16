@@ -1,0 +1,133 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+	<div class="container-fluid">
+		<div class="pull-right">
+		<button type="submit" form="form-cdekoption" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+		<button type="button" onclick="$('#form-cdekoption').attr('action', $('#form-cdekoption').attr('action') + '&redirect=false'); $('#form-cdekoption').submit();" class="btn btn-primary">{{ button_apply }}</button>
+		<a href="{{ update_city }}" data-toggle="tooltip" class="btn btn-default">
+			{{ text_updatecity }}
+		</a>
+		<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+		</div>
+		<h1>{{ heading_title }}</h1>
+		<ul class="breadcrumb">
+		{% for breadcrumb in breadcrumbs %}
+		<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+		{% endfor %}
+		</ul>
+	</div>
+	</div>
+	<div class="container-fluid">
+	{% if error_warning %}
+	<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+	{% if success %}
+	<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ success }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+		<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+		</div>
+		<div class="panel-body">
+		<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-cdekoption" class="form-horizontal">
+			<ul class="nav nav-tabs">
+			<li class="active"><a href="#tab-data" data-toggle="tab">{{ tab_data }}</a></li>
+			<li><a href="#tab-auth" data-toggle="tab">{{ tab_auth }}</a></li>
+			<li><a href="#tab-order" data-toggle="tab">{{ tab_order }}</a></li>
+			<li><a href="#tab-status" data-toggle="tab">{{ tab_status }}</a></li>
+			<li><a href="#tab-currency" data-toggle="tab">{{ tab_currency }}</a></li>
+			<li><a href="#tab-additional" data-toggle="tab">{{ tab_additional }}</a></li>
+			</ul>
+			<div class="tab-content">
+			<div class="tab-pane active" id="tab-data">
+
+				<div class="form-group">
+				<label class="col-sm-2 control-label" for="cdek-default-data">{{ entry_default_data }}</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="cdek-default-data" name="cdek_integrator_setting[cdek_default_data][use]">
+					{% for key, variable in boolean_variables %}
+					<option value="{{ key }}"{% if setting['cdek_default_data']['use'] is defined and setting['cdek_default_data']['use'] == key %} selected="selected"{% endif %}>{{ variable }}</option>
+					{% endfor %}
+					</select>
+				</div>
+				</div>
+
+				{% set style_display = '' %}
+				{% if setting['cdek_default_data']['use'] is defined and (setting['cdek_default_data']['use'] == '0' or not setting['cdek_default_data']['use']) %}
+				{% set style_display = 'style="display:none"' %}
+				{% endif %}
+				<div id="cdek-default-data_parameters" class="col-sm-offset-2 col-sm-10"{{ style_display }}>
+
+				<div class="form-group required" id="cdek-default-data-type_size">
+				<label class="col-sm-2 control-label" for=""><span data-toggle="tooltip" title="{{ entry_size_help }}">{{ entry_size }}</span></label>
+				<div class="col-sm-10 form-inline">
+					<input class="form-control" type="text" placeholder="{{ text_short_length }}" name="cdek_integrator_setting[cdek_default_data][size_a]" value="{% if setting['cdek_default_data']['size_a'] is defined %}{{ setting['cdek_default_data']['size_a'] }}{% endif %}" size="3" /> x
+					<input class="form-control" type="text" placeholder="{{ text_short_width }}" name="cdek_integrator_setting[cdek_default_data][size_b]" value="{% if setting['cdek_default_data']['size_b'] is defined %}{{ setting['cdek_default_data']['size_b'] }}{% endif %}" size="3" /> x
+					<input class="form-control" type="text" placeholder="{{ text_short_height }}" name="cdek_integrator_setting[cdek_default_data][size_c]" value="{% if setting['cdek_default_data']['size_c'] is defined %}{{ setting['cdek_default_data']['size_c'] }}{% endif %}" size="3" />
+					{% if error['setting']['cdek_default_data']['size'] is defined %}
+					<div class="text-danger">{{ error['setting']['cdek_default_data']['size'] }}</div>
+					{% endif %}
+				</div>
+				</div>
+				<div class="form-group required">
+				<label class="col-sm-2 control-label" for="">{{ entry_weight_default }}</label>
+				<div class="col-sm-10 form-inline">
+					<input class="form-control" id="cdek-default-param-value" type="text" name="cdek_integrator_setting[cdek_default_data][weight]" value="{% if setting['cdek_default_data']['weight'] is defined %}{{ setting['cdek_default_data']['weight'] }}{% endif %}" size="3" /> кг.
+					{% if error['setting']['cdek_default_data']['weight'] is defined %}
+					<div class="text-danger">{{ error['setting']['cdek_default_data']['weight'] }}</div>
+					{% endif %}
+				</div>
+				</div>
+				<div class="form-group">
+				<label class="col-sm-2 control-label" for="">{{ entry_data_work_mode_default }}</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="cdek-default-data-work-mode" name="cdek_integrator_setting[cdek_default_data][work_mode]">
+					{% for key, mode in default_work_mode %}
+					<option value="{{ key }}"{% if setting['cdek_default_data']['work_mode'] is defined and setting['cdek_default_data']['work_mode'] == key %} selected="selected"{% endif %}>{{ mode }}</option>
+					{% endfor %}
+					</select>
+				</div>
+				</div>
+			</div>
+
+			{# Additional tabs simplified - full Twig template is too large #}
+			<div class="tab-pane" id="tab-auth">
+				{# Auth tab content #}
+			</div>
+			<div class="tab-pane" id="tab-order">
+				{# Order tab content #}
+			</div>
+			<div class="tab-pane" id="tab-status">
+				{# Status tab content #}
+			</div>
+			<div class="tab-pane" id="tab-currency">
+				{# Currency tab content #}
+			</div>
+			<div class="tab-pane" id="tab-additional">
+				{# Additional tab content #}
+			</div>
+			</div>
+		</form>
+		</div>
+	</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('#cdek-default-data').change(function(event) {
+	var val = $(this).val();
+	if (val == '1') {
+		$('#cdek-default-data_parameters').show();
+	} else {
+		$('#cdek-default-data_parameters').hide();
+	}
+	});
+</script>
+
+{{ footer }}

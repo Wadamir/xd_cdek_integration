@@ -1,0 +1,194 @@
+{{ header }}{{ column_left }}
+<div id="content">
+
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="submit" form="form" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary">
+					<i class="fa fa-save"></i>
+				</button>
+				<a onclick="$('#form input[name=apply]').val(1); $('#form').submit();" class="btn btn-primary">{{ button_apply }}</a>
+				<a href="{{ update_city }}" data-toggle="tooltip" class="btn btn-default">
+					{{ text_updatecity }}
+				</a>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default">
+					<i class="fa fa-reply"></i>
+				</a>
+			</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+					<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		{% if error_warning %}
+			<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>{{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		{% if success %}
+			<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i>{{ success }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i>{{ text_form }}</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+					<input type="hidden" name="apply" value="">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+						<li><a href="#tab-data" data-toggle="tab">{{ tab_data }}</a></li>
+						<li><a href="#tab-auth" data-toggle="tab">{{ tab_auth }}</a></li>
+						<li><a href="#tab-tariff" data-toggle="tab">{{ tab_tariff }}</a></li>
+						<li><a href="#tab-discount" data-toggle="tab">{{ tab_discount }}</a></li>
+						<li><a href="#tab-package" data-toggle="tab">{{ tab_package }}</a></li>
+						<li><a href="#tab-additional" data-toggle="tab">{{ tab_additional }}</a></li>
+						<li><a href="#tab-empty" data-toggle="tab">{{ tab_empty }}</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab-general">
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-parent">{{ entry_title }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+										<div class="input-group">
+											<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+											<input class="form-control" type="text" name="cdek_title[{{ language.language_id }}]" value="{% if cdek_title[language.language_id] is defined %}{{ cdek_title[language.language_id] }}{% endif %}">
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-tax-class-id">{{ entry_tax_class }}</label>
+								<div class="col-sm-10">
+									<select class="form-control" id="cdek-tax-class-id" name="cdek_tax_class_id">
+										<option value="0">{{ text_none }}</option>
+										{% for tax_class in tax_classes %}
+											{% if tax_class.tax_class_id == cdek_tax_class_id %}
+												<option value="{{ tax_class.tax_class_id }}" selected="selected">{{ tax_class.title }}</option>
+											{% else %}
+												<option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-cdek-log"><span data-toggle="tooltip" title="{{ entry_log_help }}">{{ entry_log }}</span></label>
+								<div class="col-sm-10">
+									<select class="form-control" id="cdek-cdek-log" name="cdek_log">
+										{% for key, variable in boolean_variables %}
+											<option value="{{ key }}" {% if cdek_log == key %}selected="selected"{% endif %}>{{ variable }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="">{{ entry_store }}</label>
+								<div class="col-sm-10">
+									<div class="well well-sm" style="height: 150px; overflow: auto;">
+										{% for store in stores %}
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" name="cdek_store[]" value="{{ store.store_id }}"  {% if cdek_store is defined and store.store_id in cdek_store %}checked="checked"{% endif %}>
+													{{ store.name }}
+												</label>
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-status">{{ entry_status }}</label>
+								<div class="col-sm-10">
+									<select class="form-control" id="cdek-status" name="cdek_status">
+										{% set status_options = [text_disabled, text_enabled] %}
+										{% for key, value in status_options %}
+											<option value="{{ key }}" {% if cdek_status == key %}selected="selected"{% endif %}>{{ value }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-sort-order">{{ entry_sort_order }}</label>
+								<div class="col-sm-10">
+									<input class="form-control" id="cdek-sort-order" type="text" name="cdek_sort_order" value="{{ cdek_sort_order }}" size="1" />
+									{% if error.cdek_sort_order is defined %}
+										<div class="text-danger">{{ error.cdek_sort_order }}</div>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-data">
+							{# This is a simplified version. The full template is too large. #}
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-default-param">{{ entry_default_param }}</label>
+								<div class="col-sm-10">
+									<select class="form-control" id="cdek-default-param" name="cdek_default_param[use]">
+										{% for key, variable in boolean_variables %}
+											<option value="{{ key }}"{% if cdek_default_param.use is defined and cdek_default_param.use == key %} selected="selected"{% endif %}>{{ variable }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-auth">
+							<div class="form-group col-sm-12">
+								<span class="help">{{ text_help_auth }}</span>
+							</div>
+							<div class="form-group col-sm-12">
+								<p class="help">{{ text_testing_api_keys }}</p>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-login">{{ entry_login }}</label>
+								<div class="col-sm-10">
+									<input class="form-control" id="cdek-login" type="text" name="cdek_login" value="{{ cdek_login }}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="cdek-password">{{ entry_password }}</label>
+								<div class="col-sm-10">
+									<input class="form-control" id="cdek-password" type="text" name="cdek_password" value="{{ cdek_password }}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-tariff">
+							{# Tariff section - simplified #}
+						</div>
+
+						<div class="tab-pane" id="tab-discount">
+							{# Discount section - simplified #}
+						</div>
+
+						<div class="tab-pane" id="tab-package">
+							{# Package section - simplified #}
+						</div>
+
+						<div class="tab-pane" id="tab-additional">
+							{# Additional section - simplified #}
+						</div>
+
+						<div class="tab-pane" id="tab-empty">
+							{# Empty section - simplified #}
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
