@@ -205,7 +205,7 @@
 							<tr class="item-slider children row-status" style="display: none">
 								<td></td>
 								<td>
-									<?php if ($courier['lunch_beg'] and courier['lunch_end']) { ?>
+									<?php if ($courier['lunch_beg'] and $courier['lunch_end']) { ?>
 										Обед: с <?php echo $courier['lunch_beg']; ?> по <?php echo $courier['lunch_end']; ?><br />
 									<?php } ?>
 									<br />

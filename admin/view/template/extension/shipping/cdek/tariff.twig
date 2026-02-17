@@ -30,7 +30,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for tariff_row, tariff_info in cdek_custmer_tariff_list %}
+			{% for tariff_row, tariff_info in cdek_customer_tariff_list %}
 				<tr id="tariff-{{ tariff_row }}">
 					<td class="drag" width="1"><a title="{{ text_drag }}">&nbsp;</a></td>
 					<td class="col-md-3">
@@ -38,15 +38,15 @@
 						{% if error.tariff_list_item[tariff_row].exists is defined %}
 							<div class="text-danger">{{ error.tariff_list_item[tariff_row].exists }}</div>
 						{% endif %}
-						<input type="hidden" name="cdek_custmer_tariff_list[{{ tariff_row }}][sort_order]" value="{{ tariff_info.sort_order }}" class="sort_order" />
-						<input type="hidden" name="cdek_custmer_tariff_list[{{ tariff_row }}][tariff_id]" value="{{ tariff_info.tariff_id }}" />
-						<input type="hidden" name="cdek_custmer_tariff_list[{{ tariff_row }}][mode_id]" value="{{ tariff_info.mode_id }}" />
+						<input type="hidden" name="cdek_customer_tariff_list[{{ tariff_row }}][sort_order]" value="{{ tariff_info.sort_order }}" class="sort_order" />
+						<input type="hidden" name="cdek_customer_tariff_list[{{ tariff_row }}][tariff_id]" value="{{ tariff_info.tariff_id }}" />
+						<input type="hidden" name="cdek_customer_tariff_list[{{ tariff_row }}][mode_id]" value="{{ tariff_info.mode_id }}" />
 					</td>
 					<td class="col-md-3 form-inline">
 						{% for language in languages %}
 							<div class="input-group">
 								<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
-								<input type="text" class="form-control" name="cdek_custmer_tariff_list[{{ tariff_row }}][title][{{ language.language_id }}]" value="{% if tariff_info.title[language.language_id] is defined and tariff_info.title is iterable %}{{ tariff_info.title[language.language_id] }}{% elseif language.language_id == 1 and tariff_info.title is not iterable %}{{ tariff_info.title }}{% endif %}" />
+								<input type="text" class="form-control" name="cdek_customer_tariff_list[{{ tariff_row }}][title][{{ language.language_id }}]" value="{% if tariff_info.title[language.language_id] is defined and tariff_info.title is iterable %}{{ tariff_info.title[language.language_id] }}{% elseif language.language_id == 1 and tariff_info.title is not iterable %}{{ tariff_info.title }}{% endif %}" />
 							</div>
 						{% endfor %}
 					</td>
@@ -57,7 +57,7 @@
 							{% for customer_group in customer_groups %}
 								{% set class = class == 'even' ? 'odd' : 'even' %}
 								<div class="{{ class }}">
-									<input type="checkbox" name="cdek_custmer_tariff_list[{{ tariff_row }}][customer_group_id][]" value="{{ customer_group.customer_group_id }}" {% if tariff_info.customer_group_id is defined and tariff_info.customer_group_id is iterable and customer_group.customer_group_id in tariff_info.customer_group_id %} checked="checked"{% endif %} />
+									<input type="checkbox" name="cdek_customer_tariff_list[{{ tariff_row }}][customer_group_id][]" value="{{ customer_group.customer_group_id }}" {% if tariff_info.customer_group_id is defined and tariff_info.customer_group_id is iterable and customer_group.customer_group_id in tariff_info.customer_group_id %} checked="checked"{% endif %} />
 									{{ customer_group.name }}
 								</div>
 							{% endfor %}
@@ -70,7 +70,7 @@
 							{% for geo_zone in geo_zones %}
 								{% set class = class == 'even' ? 'odd' : 'even' %}
 								<div class="{{ class }}">
-									<input type="checkbox" name="cdek_custmer_tariff_list[{{ tariff_row }}][geo_zone][]" value="{{ geo_zone.geo_zone_id }}" {% if tariff_info.geo_zone is defined and geo_zone.geo_zone_id in tariff_info.geo_zone %} checked="checked"{% endif %} />
+									<input type="checkbox" name="cdek_customer_tariff_list[{{ tariff_row }}][geo_zone][]" value="{{ geo_zone.geo_zone_id }}" {% if tariff_info.geo_zone is defined and geo_zone.geo_zone_id in tariff_info.geo_zone %} checked="checked"{% endif %} />
 									{{ geo_zone.name }}
 								</div>
 							{% endfor %}
@@ -82,36 +82,36 @@
 							<table class="form limit">
 								<tbody>
 									<tr>
-										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-min-weight"><span data-toggle="tooltip" title="{{ entry_min_weight_help }}">{{ entry_min_weight }}</span></label></td>
+										<td><label for="cdek-customer-tariff-list-{{ tariff_row }}-min-weight"><span data-toggle="tooltip" title="{{ entry_min_weight_help }}">{{ entry_min_weight }}</span></label></td>
 										<td>
-											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-min-weight" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][min_weight]" value="{% if tariff_info.min_weight is defined %}{{ tariff_info.min_weight }}{% endif %}" size="3" />
+											<input id="cdek-customer-tariff-list-{{ tariff_row }}-min-weight" type="text" name="cdek_customer_tariff_list[{{ tariff_row }}][min_weight]" value="{% if tariff_info.min_weight is defined %}{{ tariff_info.min_weight }}{% endif %}" size="3" />
 											{% if error.tariff_list_item[tariff_row].min_weight is defined %}
 												<div class="text-danger">{{ error.tariff_list_item[tariff_row].min_weight }}</div>
 											{% endif %}
 										</td>
 									</tr>
 									<tr>
-										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-max-weight"><span data-toggle="tooltip" title="{{ entry_max_weight_help }}">{{ entry_max_weight }}</span></label></td>
+										<td><label for="cdek-customer-tariff-list-{{ tariff_row }}-max-weight"><span data-toggle="tooltip" title="{{ entry_max_weight_help }}">{{ entry_max_weight }}</span></label></td>
 										<td>
-											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-max-weight" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][max_weight]" value="{% if tariff_info.max_weight is defined %}{{ tariff_info.max_weight }}{% endif %}" size="3" />
+											<input id="cdek-customer-tariff-list-{{ tariff_row }}-max-weight" type="text" name="cdek_customer_tariff_list[{{ tariff_row }}][max_weight]" value="{% if tariff_info.max_weight is defined %}{{ tariff_info.max_weight }}{% endif %}" size="3" />
 											{% if error.tariff_list_item[tariff_row].max_weight is defined %}
 												<div class="text-danger">{{ error.tariff_list_item[tariff_row].max_weight }}</div>
 											{% endif %}
 										</td>
 									</tr>
 									<tr>
-										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-min-total"><span data-toggle="tooltip" title="{{ entry_min_total_help }}">{{ entry_min_total }}</span></label></td>
+										<td><label for="cdek-customer-tariff-list-{{ tariff_row }}-min-total"><span data-toggle="tooltip" title="{{ entry_min_total_help }}">{{ entry_min_total }}</span></label></td>
 										<td>
-											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-min-total" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][min_total]" value="{% if tariff_info.min_total is defined %}{{ tariff_info.min_total }}{% endif %}" size="3" />
+											<input id="cdek-customer-tariff-list-{{ tariff_row }}-min-total" type="text" name="cdek_customer_tariff_list[{{ tariff_row }}][min_total]" value="{% if tariff_info.min_total is defined %}{{ tariff_info.min_total }}{% endif %}" size="3" />
 											{% if error.tariff_list_item[tariff_row].min_total is defined %}
 												<div class="text-danger">{{ error.tariff_list_item[tariff_row].min_total }}</div>
 											{% endif %}
 										</td>
 									</tr>
 									<tr class="last">
-										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-max-total"><span data-toggle="tooltip" title="{{ entry_max_total_help }}">{{ entry_max_total }}</span></label></td>
+										<td><label for="cdek-customer-tariff-list-{{ tariff_row }}-max-total"><span data-toggle="tooltip" title="{{ entry_max_total_help }}">{{ entry_max_total }}</span></label></td>
 										<td>
-											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-max-total" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][max_total]" value="{% if tariff_info.max_total is defined %}{{ tariff_info.max_total }}{% endif %}" size="3" />
+											<input id="cdek-customer-tariff-list-{{ tariff_row }}-max-total" type="text" name="cdek_customer_tariff_list[{{ tariff_row }}][max_total]" value="{% if tariff_info.max_total is defined %}{{ tariff_info.max_total }}{% endif %}" size="3" />
 											{% if error.tariff_list_item[tariff_row].max_total is defined %}
 												<div class="text-danger">{{ error.tariff_list_item[tariff_row].max_total }}</div>
 											{% endif %}

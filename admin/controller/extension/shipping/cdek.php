@@ -327,12 +327,12 @@ class ControllerExtensionShippingCdek extends Controller
             $data['cdek_log'] = $this->config->get('cdek_log');
         }
 
-        if (isset($this->request->post['cdek_custmer_tariff_list'])) {
-            $data['cdek_custmer_tariff_list'] = $this->request->post['cdek_custmer_tariff_list'];
-        } elseif ($this->config->get('cdek_custmer_tariff_list')) {
-            $data['cdek_custmer_tariff_list'] = $this->config->get('cdek_custmer_tariff_list');
+        if (isset($this->request->post['cdek_customer_tariff_list'])) {
+            $data['cdek_customer_tariff_list'] = $this->request->post['cdek_customer_tariff_list'];
+        } elseif ($this->config->get('cdek_customer_tariff_list')) {
+            $data['cdek_customer_tariff_list'] = $this->config->get('cdek_customer_tariff_list');
         } else {
-            $data['cdek_custmer_tariff_list'] = array();
+            $data['cdek_customer_tariff_list'] = array();
         }
 
         $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
@@ -341,9 +341,9 @@ class ControllerExtensionShippingCdek extends Controller
 
         $data['tariff_mode'] = $this->getTariffMode();
 
-        if (isset($data['cdek_custmer_tariff_list'])) {
+        if (isset($data['cdek_customer_tariff_list'])) {
 
-            foreach ($data['cdek_custmer_tariff_list'] as $tariff_row => $tariff_info) {
+            foreach ($data['cdek_customer_tariff_list'] as $tariff_row => $tariff_info) {
 
                 if (array_key_exists('tariff_id', $tariff_info) && array_key_exists($tariff_info['tariff_id'], $data['tariff_list'])) {
 
@@ -355,7 +355,7 @@ class ControllerExtensionShippingCdek extends Controller
                         $title .= ' ***';
                     }
 
-                    $data['cdek_custmer_tariff_list'][$tariff_row] += array(
+                    $data['cdek_customer_tariff_list'][$tariff_row] += array(
                         'tariff_name'    => $title,
                         'mode_name'        => $data['tariff_mode'][$tariff_info['mode_id']]
                     );
@@ -648,7 +648,7 @@ class ControllerExtensionShippingCdek extends Controller
                 }
             }
 
-            if (!isset($this->request->post['cdek_custmer_tariff_list']) || empty($this->request->post['cdek_custmer_tariff_list'])) {
+            if (!isset($this->request->post['cdek_customer_tariff_list']) || empty($this->request->post['cdek_customer_tariff_list'])) {
                 $this->error['tariff_list'] = $this->language->get('error_tariff_list');
             } else {
 
@@ -660,7 +660,7 @@ class ControllerExtensionShippingCdek extends Controller
                     $geo_zones[$item['geo_zone_id']] = '«' . $item['name'] . '»';
                 }
 
-                foreach ($this->request->post['cdek_custmer_tariff_list'] as $tariff_row => $tariff_info) {
+                foreach ($this->request->post['cdek_customer_tariff_list'] as $tariff_row => $tariff_info) {
 
                     $tariff_id = $tariff_info['tariff_id'];
 
