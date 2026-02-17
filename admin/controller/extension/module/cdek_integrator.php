@@ -1772,7 +1772,7 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
         }
 
         if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+            $order = (string)$this->request->get['order'];
         } else {
             $order = 'DESC';
         }
@@ -2131,7 +2131,7 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
         $rdata['filter_total'] = $filter_total;
 
         $rdata['sort'] = $sort;
-        $rdata['order'] = strtolower($order);
+        $rdata['order'] = $order;
         $rdata['limit'] = $limit;
 
         $rdata['header'] = $this->load->controller('common/header');

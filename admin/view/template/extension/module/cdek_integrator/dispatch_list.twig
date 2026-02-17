@@ -103,8 +103,8 @@
 					<tr>
 						<td class="left"><a href="{{ sort_order_id }}"{% if sort == 'o.order_id' %} class="{{ order|lower }}"{% endif %}>{{ column_order_id }}</a></td>
 						<td class="left"><a href="{{ sort_dispatch_number }}"{% if sort == 'd.dispatch_number' %} class="{{ order|lower }}"{% endif %}>{{ column_dispatch_number }}</a></td>
-						<td class="left"><a href="{{ sort_order_id }}"{% if sort == 'o.order_id' %} class="{{ order|lower }}"{% endif %}>{{ column_act_number }}</a></td>
-						<td class="left"><a href="{{ sort_act_number }}"{% if sort == 'o.act_number' %} class="{{ order|lower }}"{% endif %}>{{ column_dispatch_date }}</a></td>
+                        <td class="left"><a href="{{ sort_act_number }}"{% if sort == 'o.act_number' %} class="{{ order|lower }}"{% endif %}>{{ column_act_number }}</a></td>
+                        <td class="left"><a href="{{ sort_date }}"{% if sort == 'd.date' %} class="{{ order|lower }}"{% endif %}>{{ column_dispatch_date }}</a></td>
 						<td class="left"><a href="{{ sort_city_from }}"{% if sort == 'o.city_name' %} class="{{ order|lower }}"{% endif %}>{{ column_city_from }}</a></td>
 						<td class="left"><a href="{{ sort_city_to }}"{% if sort == 'o.recipient_city_name' %} class="{{ order|lower }}"{% endif %}>{{ column_city_to }}</a></td>
 						<td class="left"><a href="{{ sort_status }}"{% if sort == 'o.status_id' %} class="{{ order|lower }}"{% endif %}>{{ column_status }}</a></td>
