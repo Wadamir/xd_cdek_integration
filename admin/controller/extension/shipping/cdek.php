@@ -593,6 +593,16 @@ class ControllerExtensionShippingCdek extends Controller
 
         $data['stores'] = array_merge($data['stores'], $this->model_setting_store->getStores());
 
+        // Load sub-templates for Twig
+        $data['html_general'] = $this->load->view('extension/shipping/cdek/general', $data);
+        $data['html_data'] = $this->load->view('extension/shipping/cdek/data', $data);
+        $data['html_auth'] = $this->load->view('extension/shipping/cdek/auth', $data);
+        $data['html_tariff'] = $this->load->view('extension/shipping/cdek/tariff', $data);
+        $data['html_discount'] = $this->load->view('extension/shipping/cdek/discount', $data);
+        $data['html_package'] = $this->load->view('extension/shipping/cdek/package', $data);
+        $data['html_additional'] = $this->load->view('extension/shipping/cdek/additional', $data);
+        $data['html_empty'] = $this->load->view('extension/shipping/cdek/empty', $data);
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
