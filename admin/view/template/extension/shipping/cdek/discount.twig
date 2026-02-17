@@ -1,0 +1,92 @@
+<div class="tab-pane" id="tab-discount">
+	<p class="help">{{ text_discount_help }}</p>
+	<table class="table" id="discount">
+		<thead>
+			<tr>
+				<td class="left"><span data-toggle="tooltip" title="{{ column_total_help }}">{{ column_total }}</span></td>
+				<td class="left">{{ column_tariff }}</td>
+				<td class="left">{{ column_tax_class }}</td>
+				<td class="left">{{ column_customer_group }}</td>
+				<td class="left">{{ column_geo_zone }}</td>
+				<td class="left">{{ column_discount_value }}</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% if cdek_discounts %}
+				{% for discount_row, discount in cdek_discounts %}
+					<tr id="discount-row{{ discount_row }}">
+						<td class="left">
+							<input type="text" class="form-control" name="cdek_discounts[{{ discount_row }}][total]" value="{{ discount.total }}" size="12" />
+							{% if error.cdek_discounts[discount_row].total is defined %}
+								<div class="text-danger">{{ error.cdek_discounts[discount_row].total }}</div>
+							{% endif %}
+						</td>
+						<td class="left">
+							<div class="well well-sm" style="height: 150px; overflow: auto;">
+								{% set class = 'even' %}
+								{% for tariff_id, tariff_info in tariff_list %}
+									{% set class = class == 'even' ? 'odd' : 'even' %}
+									<div class="{{ class }}">
+										<input type="checkbox" name="cdek_discounts[{{ discount_row }}][tariff_id][]" value="{{ tariff_id }}" {% if discount.tariff_id is defined and discount.tariff_id is iterable and tariff_id in discount.tariff_id %} checked="checked"{% endif %} />
+										{{ tariff_info.title }}
+									</div>
+								{% endfor %}
+							</div>
+						</td>
+						<td class="left">
+							<select class="form-control" name="cdek_discounts[{{ discount_row }}][tax_class_id]">
+								<option value="0">{{ text_none }}</option>
+								{% for tax_class in tax_classes %}
+									<option value="{{ tax_class.tax_class_id }}"{% if tax_class.tax_class_id == discount.tax_class_id %} selected="selected"{% endif %}>{{ tax_class.title }}</option>
+								{% endfor %}
+							</select>
+						</td>
+						<td class="left">
+							<div class="scrollbox">
+								{% set class = 'even' %}
+								{% for customer_group in customer_groups %}
+									{% set class = class == 'even' ? 'odd' : 'even' %}
+									<div class="{{ class }}">
+										<input type="checkbox" name="cdek_discounts[{{ discount_row }}][customer_group_id][]" value="{{ customer_group.customer_group_id }}" {% if discount.customer_group_id is defined and discount.customer_group_id is iterable and customer_group.customer_group_id in discount.customer_group_id %} checked="checked"{% endif %} />
+										{{ customer_group.name }}
+									</div>
+								{% endfor %}
+							</div>
+						</td>
+						<td class="left">
+							<div class="scrollbox">
+								{% set class = 'even' %}
+								{% for geo_zone in geo_zones %}
+									{% set class = class == 'even' ? 'odd' : 'even' %}
+									<div class="{{ class }}">
+										<input type="checkbox" name="cdek_discounts[{{ discount_row }}][geo_zone][]" value="{{ geo_zone.geo_zone_id }}" {% if discount.geo_zone is defined and geo_zone.geo_zone_id in discount.geo_zone %} checked="checked"{% endif %} />
+										{{ geo_zone.name }}
+									</div>
+								{% endfor %}
+							</div>
+						</td>
+						<td class="left form-inline">
+							<select class="form-control" name="cdek_discounts[{{ discount_row }}][prefix]">
+								{% for prefix in ['-', '+', '='] %}
+									<option {% if prefix == discount.prefix %} selected="selected"{% endif %} value="{{ prefix }}">{{ prefix }}</option>
+								{% endfor %}
+							</select>
+							<input type="text" class="form-control" name="cdek_discounts[{{ discount_row }}][value]" value="{{ discount.value }}" size="3" />
+							<select class="form-control" name="cdek_discounts[{{ discount_row }}][mode]">
+								{% for type, name in discount_type %}
+									<option {% if type == discount.mode %} selected="selected"{% endif %} value="{{ type }}">{{ name }}</option>
+								{% endfor %}
+							</select>
+							{% if error.cdek_discounts[discount_row].value is defined %}
+								<div class="text-danger">{{ error.cdek_discounts[discount_row].value }}</div>
+							{% endif %}
+						</td>
+						<td class="left"><a onclick="$('#discount-row{{ discount_row }}').remove();return FALSE;" class="button">{{ button_remove }}</a></td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+		</tbody>
+	</table>
+	<a class="button" onclick="addDiscount();">{{ button_add_discount }}</a>
+</div>

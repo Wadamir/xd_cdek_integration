@@ -1,0 +1,146 @@
+<div class="tab-pane" id="tab-data">
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-default-param">{{ entry_default_param }}</label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-default-param" name="cdek_default_param[use]">
+				{% for key, variable in boolean_variables %}
+					<option value="{{ key }}"{% if cdek_default_param.use is defined and cdek_default_param.use == key %} selected="selected"{% endif %}>{{ variable }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	{% set style_param = cdek_default_param.use is defined and (cdek_default_param.use == '0' or not cdek_default_param.use) ? 'style="display:none"' : '' %}
+	<div id="cdek-default-param_parameters" class="col-sm-offset-2 col-sm-10" {{ style_param }}>
+
+		<div class="form-group required" id="cdek-default-param-type_size">
+			<label class="col-sm-2 control-label" for=""><span data-toggle="tooltip" title="{{ entry_size_help }}">{{ entry_size }}</span></label>
+			<div class="col-sm-10 form-inline">
+				<input class="form-control" id="cdek-default-param-type-size-a" type="text" placeholder="{{ text_short_length }}" name="cdek_default_param[size_a]" value="{% if cdek_default_param.size_a is defined %}{{ cdek_default_param.size_a }}{% endif %}" size="2" /> x
+				<input class="form-control" type="text" placeholder="{{ text_short_width }}" name="cdek_default_param[size_b]" value="{% if cdek_default_param.size_b is defined %}{{ cdek_default_param.size_b }}{% endif %}" size="2" /> x
+				<input class="form-control" type="text" placeholder="{{ text_short_height }}" name="cdek_default_param[size_c]" value="{% if cdek_default_param.size_c is defined %}{{ cdek_default_param.size_c }}{% endif %}" size="2" />
+				{% if error.cdek_default_param.size is defined %}
+					<div class="text-danger">{{ error.cdek_default_param.size }}</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="form-group required">
+			<label class="col-sm-2 control-label" for="">{{ entry_default_weight }}</label>
+			<div class="col-sm-10 form-inline">
+				<input class="form-control" id="cdek-default-param-value" type="text" name="cdek_default_param[weight]" value="{% if cdek_default_param.weight is defined %}{{ cdek_default_param.weight }}{% endif %}" size="1" /> кг.
+				{% if error.cdek_default_param.weight is defined %}
+					<div class="text-danger">{{ error.cdek_default_param.weight }}</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="">{{ entry_default_param_work_mode }}</label>
+			<div class="col-sm-10">
+				<select class="form-control" id="cdek-default-param-work-mode" name="cdek_default_param[work_mode]">
+					{% for key, mode in default_work_mode %}
+						<option value="{{ key }}"{% if cdek_default_param.work_mode is defined and cdek_default_param.work_mode == key %} selected="selected"{% endif %}>{{ mode }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-append-day">{{ entry_date_execute }}</label>
+		<div class="col-sm-10 form-inline">
+			{{ text_date_current }} + <input class="form-control" id="cdek-append-day" type="text" name="cdek_append_day" value="{{ cdek_append_day }}" size="1" />{{ text_day }}
+			{% if error.cdek_append_day is defined %}
+				<div class="text-danger">{{ error.cdek_append_day }}</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-cache-on-delivery">{{ entry_cache_on_delivery }}</label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-cache-on-delivery" name="cdek_cache_on_delivery">
+				{% for key, variable in boolean_variables %}
+					<option value="{{ key }}"{% if cdek_cache_on_delivery == key %} selected="selected"{% endif %}>{{ variable }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-weight-limit">{{ entry_weight_limit }}</label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-weight-limit" name="cdek_weight_limit">
+				{% for key, variable in boolean_variables %}
+					<option value="{{ key }}"{% if cdek_weight_limit == key %} selected="selected"{% endif %}>{{ variable }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-use-postcode"><span data-toggle="tooltip" title="{{ entry_use_region_russia_help }}">{{ entry_use_region_russia }}</span></label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-use-region-russia" name="cdek_use_region_russia">
+				{% for key, variable in boolean_variables %}
+					<option value="{{ key }}"{% if cdek_use_region_russia == key %} selected="selected"{% endif %}>{{ variable }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	<input type="hidden" name="cdek_use_region" value="0">
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-use-postcode"><span data-toggle="tooltip" title="{{ entry_use_postcode_help }}">{{ entry_use_postcode }}</span></label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-use-postcode" name="cdek_use_postcode">
+				{% for key, variable in boolean_variables %}
+					<option value="{{ key }}"{% if cdek_use_postcode == key %} selected="selected"{% endif %}>{{ variable }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group required">
+		<label class="col-sm-2 control-label" for="cdek-city-from">{{ entry_city_from }}</label>
+		<div class="col-sm-10">
+			<input type="hidden" id="cdek-city-from-id" name="cdek_city_from_id" value="{{ cdek_city_from_id }}"/>
+			<a class="js city-from" {% if not cdek_city_from_id %} style="display:none"{% endif %}>{{ cdek_city_from }}</a>
+			<input class="form-control" type="text" id="cdek-city-from" name="cdek_city_from" value="{{ cdek_city_from }}" {% if cdek_city_from_id %} style="display:none" {% endif %} />
+			{% if error.cdek_city_from is defined %}
+				<div class="text-danger">{{ error.cdek_city_from }}</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="form-group required">
+		<label class="col-sm-2 control-label" for="cdek-length-class-id"><span data-toggle="tooltip" title="{{ entry_length_class_help }}">{{ entry_length_class }}</span></label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-length-class-id" name="cdek_length_class_id">
+				{% for length_class in length_classes %}
+					<option value="{{ length_class.length_class_id }}" {% if length_class.length_class_id == cdek_length_class_id %} selected="selected"{% endif %}>{{ length_class.title }}</option>
+				{% endfor %}
+			</select>
+			{% if error.length_class_id is defined %}
+				<div class="text-danger">{{ error.length_class_id }}</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="form-group required">
+		<label class="col-sm-2 control-label" for="cdek-weight-class-id"><span data-toggle="tooltip" title="{{ entry_weight_class_help }}">{{ entry_weight_class }}</span></label>
+		<div class="col-sm-10">
+			<select class="form-control" id="cdek-weight-class-id" name="cdek_weight_class_id">
+				{% for weight_class in weight_classes %}
+					<option value="{{ weight_class.weight_class_id }}" {% if weight_class.weight_class_id == cdek_weight_class_id %} selected="selected"{% endif %}>{{ weight_class.title }}</option>
+				{% endfor %}
+			</select>
+			{% if error.cdek_weight_class_id is defined %}
+				<div class="text-danger">{{ error.cdek_weight_class_id }}</div>
+			{% endif %}
+		</div>
+	</div>
+</div>

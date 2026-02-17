@@ -1,0 +1,143 @@
+<div class="tab-pane" id="tab-tariff">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-work-mode"><span data-toggle="tooltip" title="{{ entry_work_mode_help }}">{{ entry_work_mode }}</span></label>
+		<div class="col-sm-10">
+			<div class="alert alert-warning" id="cdek-work-mode_parameters">{{ text_more_attention }}</div>
+			<select id="cdek-work-mode" class="form-control work-mode" name="cdek_work_mode">
+				{% for mode_id, mode_name in work_mode %}
+					<option value="{{ mode_id }}"{% if mode_id == cdek_work_mode %} selected="selected"{% endif %}>{{ mode_name }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	<input type="hidden" name="cdek_show_pvz" value="1">
+	<input type="hidden" name="cdek_pvz_more_one" value="merge">
+
+	{% if error.tariff_list is defined %}
+		<div class="text-danger tariff_list">{{ error.tariff_list }}</div>
+	{% endif %}
+
+	<table class="table table-striped list">
+		<thead>
+			<tr>
+				<td class="left" colspan="2">{{ column_tariff }}</td>
+				<td class="left"><span data-toggle="tooltip" title="{{ column_title_help }}">{{ column_title }}</span></td>
+				<td class="left">{{ column_customer_group }}</td>
+				<td class="left"><span data-toggle="tooltip" title="{{ column_geo_zone_help }}">{{ column_geo_zone }}</span></td>
+				<td class="left">{{ column_limit }}</td>
+				<td class="left"></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for tariff_row, tariff_info in cdek_custmer_tariff_list %}
+				<tr id="tariff-{{ tariff_row }}">
+					<td class="drag" width="1"><a title="{{ text_drag }}">&nbsp;</a></td>
+					<td class="col-md-3">
+						<nobr>{{ tariff_info.tariff_name }}</nobr><br><b>{{ column_mode }}</b>:{{ tariff_info.mode_name }}
+						{% if error.tariff_list_item[tariff_row].exists is defined %}
+							<div class="text-danger">{{ error.tariff_list_item[tariff_row].exists }}</div>
+						{% endif %}
+						<input type="hidden" name="cdek_custmer_tariff_list[{{ tariff_row }}][sort_order]" value="{{ tariff_info.sort_order }}" class="sort_order" />
+						<input type="hidden" name="cdek_custmer_tariff_list[{{ tariff_row }}][tariff_id]" value="{{ tariff_info.tariff_id }}" />
+						<input type="hidden" name="cdek_custmer_tariff_list[{{ tariff_row }}][mode_id]" value="{{ tariff_info.mode_id }}" />
+					</td>
+					<td class="col-md-3 form-inline">
+						{% for language in languages %}
+							<div class="input-group">
+								<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+								<input type="text" class="form-control" name="cdek_custmer_tariff_list[{{ tariff_row }}][title][{{ language.language_id }}]" value="{% if tariff_info.title[language.language_id] is defined and tariff_info.title is iterable %}{{ tariff_info.title[language.language_id] }}{% elseif language.language_id == 1 and tariff_info.title is not iterable %}{{ tariff_info.title }}{% endif %}" />
+							</div>
+						{% endfor %}
+					</td>
+					<td class="left">
+						<a href="#" onclick="$('#groupsBlock-{{ tariff_row }}').toggle(); return false;">{{ column_customer_group }}</a>
+						<div class="scrollbox" id="groupsBlock-{{ tariff_row }}" style="display: none;">
+							{% set class = 'even' %}
+							{% for customer_group in customer_groups %}
+								{% set class = class == 'even' ? 'odd' : 'even' %}
+								<div class="{{ class }}">
+									<input type="checkbox" name="cdek_custmer_tariff_list[{{ tariff_row }}][customer_group_id][]" value="{{ customer_group.customer_group_id }}" {% if tariff_info.customer_group_id is defined and tariff_info.customer_group_id is iterable and customer_group.customer_group_id in tariff_info.customer_group_id %} checked="checked"{% endif %} />
+									{{ customer_group.name }}
+								</div>
+							{% endfor %}
+						</div>
+					</td>
+					<td class="left">
+						<a href="#" onclick="$('#geozoneBlock-{{ tariff_row }}').toggle(); return false;">{{ column_geo_zone }}</a>
+						<div class="scrollbox" id="geozoneBlock-{{ tariff_row }}" style="display: none;">
+							{% set class = 'even' %}
+							{% for geo_zone in geo_zones %}
+								{% set class = class == 'even' ? 'odd' : 'even' %}
+								<div class="{{ class }}">
+									<input type="checkbox" name="cdek_custmer_tariff_list[{{ tariff_row }}][geo_zone][]" value="{{ geo_zone.geo_zone_id }}" {% if tariff_info.geo_zone is defined and geo_zone.geo_zone_id in tariff_info.geo_zone %} checked="checked"{% endif %} />
+									{{ geo_zone.name }}
+								</div>
+							{% endfor %}
+						</div>
+					</td>
+					<td class="left">
+						<a href="#" onclick="$('#limitBlock-{{ tariff_row }}').toggle(); return false;">{{ column_limit }}</a>
+						<div id="limitBlock-{{ tariff_row }}" style="display: none;">
+							<table class="form limit">
+								<tbody>
+									<tr>
+										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-min-weight"><span data-toggle="tooltip" title="{{ entry_min_weight_help }}">{{ entry_min_weight }}</span></label></td>
+										<td>
+											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-min-weight" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][min_weight]" value="{% if tariff_info.min_weight is defined %}{{ tariff_info.min_weight }}{% endif %}" size="3" />
+											{% if error.tariff_list_item[tariff_row].min_weight is defined %}
+												<div class="text-danger">{{ error.tariff_list_item[tariff_row].min_weight }}</div>
+											{% endif %}
+										</td>
+									</tr>
+									<tr>
+										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-max-weight"><span data-toggle="tooltip" title="{{ entry_max_weight_help }}">{{ entry_max_weight }}</span></label></td>
+										<td>
+											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-max-weight" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][max_weight]" value="{% if tariff_info.max_weight is defined %}{{ tariff_info.max_weight }}{% endif %}" size="3" />
+											{% if error.tariff_list_item[tariff_row].max_weight is defined %}
+												<div class="text-danger">{{ error.tariff_list_item[tariff_row].max_weight }}</div>
+											{% endif %}
+										</td>
+									</tr>
+									<tr>
+										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-min-total"><span data-toggle="tooltip" title="{{ entry_min_total_help }}">{{ entry_min_total }}</span></label></td>
+										<td>
+											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-min-total" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][min_total]" value="{% if tariff_info.min_total is defined %}{{ tariff_info.min_total }}{% endif %}" size="3" />
+											{% if error.tariff_list_item[tariff_row].min_total is defined %}
+												<div class="text-danger">{{ error.tariff_list_item[tariff_row].min_total }}</div>
+											{% endif %}
+										</td>
+									</tr>
+									<tr class="last">
+										<td><label for="cdek-custmer-tariff-list-{{ tariff_row }}-max-total"><span data-toggle="tooltip" title="{{ entry_max_total_help }}">{{ entry_max_total }}</span></label></td>
+										<td>
+											<input id="cdek-custmer-tariff-list-{{ tariff_row }}-max-total" type="text" name="cdek_custmer_tariff_list[{{ tariff_row }}][max_total]" value="{% if tariff_info.max_total is defined %}{{ tariff_info.max_total }}{% endif %}" size="3" />
+											{% if error.tariff_list_item[tariff_row].max_total is defined %}
+												<div class="text-danger">{{ error.tariff_list_item[tariff_row].max_total }}</div>
+											{% endif %}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</td>
+					<td class="left"><a onclick="removeTariff({{ tariff_row }});" class="button">{{ button_remove }}</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cdek-pvz-more-one">{{ text_tariff }}</label>
+		<div class="col-sm-10">
+			<select class="form-control cdek-tariff">
+				<option value="0">{{ text_select }}</option>
+				{% for tariff_id, tariff_info in tariff_list %}
+					<option rel="{{ tariff_info.mode_id }}" value="{{ tariff_id }}">{{ tariff_info.title }}{% if tariff_info.im is defined %} ***{% endif %}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<a onclick="simtariffs();">Добавить все тарифы</a>
+	<p class="help">{{ text_help_im }}</p>
+</div>
