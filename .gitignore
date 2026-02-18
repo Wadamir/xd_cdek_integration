@@ -76,18 +76,19 @@
 !catalog/model/extension/
 !catalog/model/extension/shipping/
 !catalog/model/extension/shipping/cdek.php
+!catalog/model/extension/shipping/cdek_calculate_price_delivery.php
 !catalog/model/extension/total/
 !catalog/model/extension/total/cdek.php
 !catalog/model/extension/total/cod_cdek_total.php
 !catalog/view/
 !catalog/view/javascript/
-!catalog/view/javascript/sdek.js
+!catalog/view/javascript/cdek.js
 !catalog/view/theme/
 !catalog/view/theme/default/
 !catalog/view/theme/default/template/
 !catalog/view/theme/default/template/extension/
 !catalog/view/theme/default/template/extension/shipping/
-!catalog/view/theme/default/template/extension/shipping/sdek.*
+!catalog/view/theme/default/template/extension/shipping/cdek.*
 
 # CDEK Module files (system)
 !system/

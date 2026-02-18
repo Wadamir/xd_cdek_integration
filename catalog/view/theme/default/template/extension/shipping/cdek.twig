@@ -9,14 +9,13 @@
 
 	{% if usePvz %}
 		<div class="sdek_pvz_info">
-		<button class="btn btn-primary cdek_btn_pvz">
-			<a id="selectCdekPvz" href="javascript:" onclick="cdekPvzClick('{{ code }}', '{{ pvzType }}');">{{ text_select_pickup_point }}</a>
-	</button>
+			<button class="btn btn-primary cdek_btn_pvz">
+				<a id="selectCdekPvz" href="javascript:" onclick="cdekPvzClick('{{ code }}', '{{ pvzType }}');">{{ text_select_pickup_point }}</a>
+			</button>
 			{% set pvz_address = '' %}
 			{% if selected_pvz[code] is defined %}
 				{% set pvz_address = selected_pvz[code] %}
 			{% endif %}
-
 			<span class="cdek_selectedPvzInfo" id="cdek_selectedPvzInfo_{{ code }}">{{ pvz_address }}</span>
 		</div>
 		<input type="hidden" name="need_pvz[]" value="{{ code }}">

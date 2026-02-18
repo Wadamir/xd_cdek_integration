@@ -340,16 +340,16 @@ class ModelExtensionShippingCdek extends Model
                         }
                     }
 
-                    if (!file_exists(DIR_APPLICATION . 'model' . DIRECTORY_SEPARATOR . 'extension' . DIRECTORY_SEPARATOR . 'shipping' . DIRECTORY_SEPARATOR . 'CalculatePriceDeliveryCdek.php')) {
+                    if (!file_exists(DIR_APPLICATION . 'model' . DIRECTORY_SEPARATOR . 'extension' . DIRECTORY_SEPARATOR . 'shipping' . DIRECTORY_SEPARATOR . 'cdek_calculate_price_delivery.php')) {
 
                         if ($this->config->get('cdek_log')) {
-                            $this->cdekLog('СДЭК: file CalculatePriceDeliveryCdek.php not found!');
+                            $this->cdekLog('СДЭК: file cdek_calculate_price_delivery.php not found!');
                         }
 
                         return;
                     }
 
-                    require_once DIR_APPLICATION . 'model' . DIRECTORY_SEPARATOR . 'extension' . DIRECTORY_SEPARATOR . 'shipping' . DIRECTORY_SEPARATOR . 'CalculatePriceDeliveryCdek.php';
+                    require_once DIR_APPLICATION . 'model' . DIRECTORY_SEPARATOR . 'extension' . DIRECTORY_SEPARATOR . 'shipping' . DIRECTORY_SEPARATOR . 'cdek_calculate_price_delivery.php';
 
                     if (!class_exists('CalculatePriceDeliveryCdek')) {
 
@@ -470,7 +470,7 @@ class ModelExtensionShippingCdek extends Model
 
                     if ($status) {
 
-                        if (!$this->config->get('cdek_custmer_tariff_list')) {
+                        if (!$this->config->get('cdek_customer_tariff_list')) {
 
                             if ($this->config->get('cdek_log')) {
                                 $this->cdekLog('СДЭК: список тарифов пуст!');
@@ -501,7 +501,7 @@ class ModelExtensionShippingCdek extends Model
 
                             $results = $tariff_list = array();
 
-                            foreach ($this->config->get('cdek_custmer_tariff_list') as $key => $tariff_info) {
+                            foreach ($this->config->get('cdek_customer_tariff_list') as $key => $tariff_info) {
 
                                 if (empty($cdek_tariff_list[$tariff_info['tariff_id']])) continue;
 
@@ -687,6 +687,12 @@ class ModelExtensionShippingCdek extends Model
                                                 $price = $shipping_price = ($this->config->get('config_currency') == 'RUB') ? $shipping_info['total_sum'] : $this->currency->convert($shipping_info['total_sum'], 'RUB', $this->config->get('config_currency'));
                                             } elseif (!empty($shipping_info['delivery_sum'])) {
                                                 $price = $shipping_price = ($this->config->get('config_currency') == 'RUB') ? $shipping_info['delivery_sum'] : $this->currency->convert($shipping_info['delivery_sum'], 'RUB', $this->config->get('config_currency'));
+                                            } else {
+                                                if ($this->config->get('cdek_log')) {
+                                                    $this->cdekLog('СДЭК: не получена стоимость для тарифа ' . $shipping_info['tariffId']);
+                                                }
+
+                                                continue;
                                             }
 
                                             $customer_tariff_info = $tariff_list[$shipping_info['tariffId']];
