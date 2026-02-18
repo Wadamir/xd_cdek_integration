@@ -162,6 +162,7 @@ $_['error_receipt_load_retry']               = 'Не удалось загруз
 $_['error_order_not_found_in_cdek']          = 'Заказ #%s не найден в базе СДЭК!';
 $_['error_order_shipped_incorrect']          = 'Заказ #%s отгружен некорректно!';
 $_['error_package_item_list_empty']          = 'Список вложений пуст';
+$_['error_date_future']                        = 'Дата должна быть в будущем';
 
 // Log messages
 $_['log_status_rules_not_set']               = 'Не заданы правила соответствия статусов';

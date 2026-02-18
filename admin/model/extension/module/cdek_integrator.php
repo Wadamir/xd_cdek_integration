@@ -839,9 +839,9 @@ class ModelExtensionModuleCdekIntegrator extends Model
         return $response;
     }
 
-    public function getOrderToSdek($order_id)
+    public function getOrderToCdek($order_id)
     {
-        $sql = "SELECT * FROM `" . DB_PREFIX . "order_to_sdek` WHERE `order_id` = '" . $order_id . "' LIMIT 1";
+        $sql = "SELECT * FROM `" . DB_PREFIX . "order_to_cdek` WHERE `order_id` = '" . $order_id . "' LIMIT 1";
         $query = $this->db->query($sql);
         if ($query->num_rows) {
             return $query->row;
@@ -1107,12 +1107,12 @@ class ModelExtensionModuleCdekIntegrator extends Model
 
         $this->db->query($sql);
 
-        $sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "order_to_sdek` ( ";
-        $sql .= "`order_to_sdek_id` int(11) NOT NULL AUTO_INCREMENT, ";
+        $sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "order_to_cdek` ( ";
+        $sql .= "`order_to_cdek_id` int(11) NOT NULL AUTO_INCREMENT, ";
         $sql .= "`order_id` int(11) NOT NULL, ";
         $sql .= "`cityId` int(11) NOT NULL, ";
         $sql .= "`pvz_code` varchar(255) NOT NULL, ";
-        $sql .= "PRIMARY KEY (`order_to_sdek_id`), ";
+        $sql .= "PRIMARY KEY (`order_to_cdek_id`), ";
         $sql .= "UNIQUE KEY `order_id` (`order_id`) ";
         $sql .= ") ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 

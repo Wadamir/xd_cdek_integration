@@ -968,7 +968,7 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
 
         $rdata['check_package'] = $check_package;
 
-        $order_to_sdek = $this->model_extension_module_cdek_integrator->getOrderToSdek($this->request->get['order_id']);
+        $order_to_cdek = $this->model_extension_module_cdek_integrator->getOrderToCdek($this->request->get['order_id']);
 
         $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
 
@@ -1425,14 +1425,14 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
                     }
                 }
 
-                if ($order_to_sdek['cityId']) {
-                    $city_info = $this->model_extension_module_cdek_integrator->getCityById((int)$order_to_sdek['cityId']);
+                if ($order_to_cdek['cityId']) {
+                    $city_info = $this->model_extension_module_cdek_integrator->getCityById((int)$order_to_cdek['cityId']);
                     $exdata += array(
-                        'recipient_city_id'        => $order_to_sdek['cityId'],
+                        'recipient_city_id'        => $order_to_cdek['cityId'],
                         'recipient_city_name'    => $city_info['name']
                     );
 
-                    $pvz_list = $this->getPVZ($order_to_sdek['cityId']);
+                    $pvz_list = $this->getPVZ($order_to_cdek['cityId']);
 
                     if (!empty($pvz_list['List'])) {
                         $exdata['pvz_list'] = $pvz_list['List'];
@@ -1452,8 +1452,8 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
                             list(, $tariff_id, $pvz_code) = $tariff_parts;
 
                             $tariff_info = $this->getInfo()->getTariffInfo($tariff_id);
-                            if ($order_to_sdek['pvz_code']) {
-                                $pvz_code = $order_to_sdek['pvz_code'];
+                            if ($order_to_cdek['pvz_code']) {
+                                $pvz_code = $order_to_cdek['pvz_code'];
                             }
                             if ($tariff_info) {
 
@@ -3601,7 +3601,7 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
                         if ($order_info['courier']['date'] == '' || !$this->validateDate($order_info['courier']['date'], FALSE)) {
                             $this->error['cdek_orders']['courier']['date'] = $this->language->get('error_date');
                         } elseif (!$this->validateDate($order_info['courier']['date'], TRUE, 'Y-m-d')) {
-                            $this->error['cdek_orders']['courier']['date'] = $this->language->get('error_date_futured');
+                            $this->error['cdek_orders']['courier']['date'] = $this->language->get('error_date_future');
                         } else {
 
                             $timestamp = strtotime(date('Y-m-d', strtotime($order_info['courier']['date'])));

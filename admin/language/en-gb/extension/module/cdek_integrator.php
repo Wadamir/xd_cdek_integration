@@ -162,6 +162,7 @@ $_['error_receipt_load_retry']              = 'Failed to load receipt, please tr
 $_['error_order_not_found_in_cdek']         = 'Order #%s was not found in CDEK database!';
 $_['error_order_shipped_incorrect']         = 'Order #%s was shipped incorrectly!';
 $_['error_package_item_list_empty']         = 'Package item list is empty';
+$_['error_date_future']                       = 'Date must be in the future';
 
 // Log messages
 $_['log_status_rules_not_set']              = 'Status mapping rules are not set';
