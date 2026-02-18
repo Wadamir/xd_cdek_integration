@@ -32,7 +32,7 @@
 !admin/model/extension/module/
 !admin/model/extension/module/cdek_integrator.php
 !admin/model/tool/
-!admin/model/tool/cdektool.php
+!admin/model/tool/cdek_tool.php
 !admin/view/
 !admin/view/image/
 !admin/view/image/cdek/

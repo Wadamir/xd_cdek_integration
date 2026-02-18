@@ -886,8 +886,8 @@ class ModelExtensionModuleCdekIntegrator extends Model
         $sql .= ") ENGINE=MyISAM DEFAULT CHARSET=utf8";
 
         $this->db->query($sql);
-        $this->load->model('tool/cdektool');
-        $this->model_tool_cdektool->importCdekCities();
+        $this->load->model('tool/cdek_tool');
+        $this->model_tool_cdek_tool->importCdekCities();
 
         $sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_dispatch` ( ";
         $sql .= "`dispatch_id` int(11) NOT NULL AUTO_INCREMENT, ";

@@ -1,5 +1,5 @@
 <?php
-class ModelToolCdektool extends Model
+class ModelToolCdekTool extends Model
 {
 
     public function check()

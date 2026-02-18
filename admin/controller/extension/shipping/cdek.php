@@ -11,7 +11,7 @@ class ControllerExtensionShippingCdek extends Controller
         require_once DIR_SYSTEM . 'library/cdek_integrator/class.cdek_integrator.php';
         $this->api = new cdek_integrator($this->config->get('cdek_login'), $this->config->get('cdek_password'));
 
-        $this->load->model('tool/cdektool');
+        $this->load->model('tool/cdek_tool');
 
         // Get user_token for URL parameters (OpenCart 3.x)
         $user_token = isset($this->session->data['user_token']) ? $this->session->data['user_token'] : '';
@@ -19,8 +19,8 @@ class ControllerExtensionShippingCdek extends Controller
             $user_token = $this->request->get['user_token'];
         }
 
-        if (!$this->model_tool_cdektool->check()) {
-            $this->response->redirect($this->url->link('tool/cdektool', 'user_token=' . $user_token, true));
+        if (!$this->model_tool_cdek_tool->check()) {
+            $this->response->redirect($this->url->link('tool/cdek_tool', 'user_token=' . $user_token, true));
         }
 
         $this->load->language('extension/shipping/cdek');
@@ -820,7 +820,7 @@ class ControllerExtensionShippingCdek extends Controller
 
     public function checkInstall()
     {
-        $status = $this->model_tool_cdektool->checkInstalled('shipping', 'cdek');
+        $status = $this->model_tool_cdek_tool->checkInstalled('shipping', 'cdek');
     }
 
     private function getInfo()
