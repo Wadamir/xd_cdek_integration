@@ -30,6 +30,7 @@
 			</tr>
 		</thead>
 		<tbody>
+            {% set tariff_row_number = 0 %}
 			{% for tariff_row, tariff_info in cdek_customer_tariff_list %}
 				<tr id="tariff-{{ tariff_row }}">
 					<td class="drag" width="1"><a title="{{ text_drag }}">&nbsp;</a></td>
@@ -123,6 +124,7 @@
 					</td>
 					<td class="left"><a onclick="removeTariff({{ tariff_row }});" class="button">{{ button_remove }}</a></td>
 				</tr>
+                {% set tariff_row_number = tariff_row_number + 1 %}
 			{% endfor %}
 		</tbody>
 	</table>
@@ -141,3 +143,6 @@
 	<a onclick="simtariffs();">Добавить все тарифы</a>
 	<p class="help">{{ text_help_im }}</p>
 </div>
+<script>
+    var tariff_row = {{ tariff_row_number }};
+</script>

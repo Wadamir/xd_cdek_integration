@@ -144,3 +144,67 @@
 		</div>
 	</div>
 </div>
+<script>
+	$('.js.city-from').click(function(){
+		$("#cdek-city-from").show().focus().trigger('keydown');
+		$(this).hide();
+	});
+
+	$("#cdek-city-from").blur(function(){
+        console.log('cdek-city-from blur');
+		if ($('#cdek-city-from-id').val() != '') {
+			$('.js.city-from').show();
+			$(this).hide();
+		}
+	});
+
+	$("#cdek-city-from").change(function(){
+        console.log('cdek-city-from change');
+		$('#cdek-city-from-id').val('');
+	});
+
+	$(function() {
+		$("#cdek-city-from").autocomplete({
+			source: function(request,response) {
+				$.ajax({
+						url: "index.php?route=extension/module/cdek_integrator/getCityByName&user_token={{ user_token }}",
+					dataType: "json",
+					data: {
+						q: function () { 
+                            console.log('Autocomplete request, q =', $("#cdek-city-from").val());
+                            return $("#cdek-city-from").val() 
+                        },
+						name_startsWith: function () { 
+                            console.log('Autocomplete request, name_startsWith =', $("#cdek-city-from").val());
+                            return $("#cdek-city-from").val() 
+                        }
+					},
+					success: function(data) {
+                        console.log('AJAX success, data:', data);
+						response($.map(data, function(item) {
+							return {
+								label: item.full_name,
+								value: item.full_name,
+								id: item.code
+							}
+						}));
+					}
+				});
+			},
+			minLength: 1,
+			select: function(event, ui) {
+				var item = (ui && ui.item) ? ui.item : event;
+				if (!item) {
+					return;
+				}
+				console.log('Autocomplete select, item:', item);
+				$('#cdek-city-from-id').parent().find('.error').remove();
+				$('#cdek-city-from-id').val(item.id || '');
+				$("#cdek-city-from").val(item.label || item.value || '');
+				$('.js.city-from').text(item.label || item.value || '').show();
+				$("#cdek-city-from").hide();
+			}
+		});
+
+	});
+</script>

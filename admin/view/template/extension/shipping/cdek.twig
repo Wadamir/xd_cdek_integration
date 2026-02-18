@@ -68,4 +68,226 @@
 	</div>
 </div>
 
+<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
+<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script>
+<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+<script type="text/javascript">
+<!--
+	$('#cdek-default-param').change(function(event) {
+		var val = $(this).val();
+		if (val == '1') {
+			$('#cdek-default-param_parameters').show();
+		} else {
+			$('#cdek-default-param_parameters').hide();
+		}
+	});
+
+	$('#cdek-show-pvz').change(function(event) {
+		var val = $(this).val();
+		if (val == '1') {
+			$('#cdek-show-pvz_parameters').show();
+		} else {
+			$('#cdek-show-pvz_parameters').hide();
+		}
+	});
+
+	$('#cdek-empty').change(function(event) {
+		var val = $(this).val();
+		if (val == '1') {
+			$('#cdek-empty_parameters').show();
+		} else {
+			$('#cdek-empty_parameters').hide();
+		}
+	});
+
+	var mode_list = [];
+	{% for mode_id, mode_name in tariff_mode %}
+        mode_list[{{ mode_id }}] = '{{ mode_name|e('js') }}';
+	{% endfor %}
+
+	var tariff_list = [];
+	{% for tariff_id, tariff_info in tariff_list %}
+        tariff_list[{{ tariff_id }}] = '{{ tariff_info.title|e('js') }}';
+	{% endfor %}
+
+
+    /* Discounts */
+	function addDiscount() {
+		var html = '<tr id="discount-row' + discount_row + '">';
+		html += '		<td class="left">';
+		html += '			<input type="text" class="form-control" name="cdek_discounts[' + discount_row + '][total]" value="" size="12" />';
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += '			<div class="well well-sm" style="height: 150px; overflow: auto;">';
+		{% for tariff_id, tariff_info in tariff_list %}
+            html += '				<div class="{{ cycle(['odd', 'even'], loop.index0) }}">';
+            html += '				<input type="checkbox" name="cdek_discounts[' + discount_row + '][tariff_id][]" value="{{ tariff_id }}" />';
+            html += '				{{ tariff_info.title|e('js') }}';
+            html += '				</div>';
+		{% endfor %}
+		html += '			</div>';
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += '			<select class="form-control" name="cdek_discounts[' + discount_row + '][tax_class_id]">';
+		html += '				<option value="0">{{ text_none|e('js') }}</option>';
+		{% for tax_class in tax_classes %}
+            html += '				<option value="{{ tax_class.tax_class_id }}">{{ tax_class.title|e('js') }}</option>';
+		{% endfor %}
+		html += '			</select>';
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += '			<div class="scrollbox">';
+		{% for customer_group in customer_groups %}
+            html += '				<div class="{{ cycle(['odd', 'even'], loop.index0) }}">';
+            html += '				<input type="checkbox" name="cdek_discounts[' + discount_row + '][customer_group_id][]" value="{{ customer_group.customer_group_id }}" />';
+            html += '				{{ customer_group.name|e('js') }}';
+		html += '				</div>';
+		{% endfor %}
+		html += '			</div>';
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += '			<div class="scrollbox">';
+		{% for geo_zone in geo_zones %}
+            html += '				<div class="{{ cycle(['odd', 'even'], loop.index0) }}">';
+            html += '					<input type="checkbox" name="cdek_discounts[' + discount_row + '][geo_zone][]" value="{{ geo_zone.geo_zone_id }}" />';
+            html += '					{{ geo_zone.name|e('js') }}';
+            html += '				</div>';
+		{% endfor %}
+		html += '			</div>';
+		html += '		</td>';
+		html += '		<td class="left"><div class="form-inline">';
+		html += '			<select class="form-control" name="cdek_discounts[' + discount_row + '][prefix]">';
+		{% for prefix in ['-', '+', '='] %}
+            html += '				<option value="{{ prefix }}">{{ prefix }}</option>';
+		{% endfor %}
+		html += '			</select>';
+		html += '			<input class="form-control" type="text" name="cdek_discounts[' + discount_row + '][value]" value="" size="3" />';
+		html += '			<select class="form-control" name="cdek_discounts[' + discount_row + '][mode]">';
+		{% for type, name in discount_type %}
+            html += '				<option value="{{ type }}">{{ name|e('js') }}</option>';
+		{% endfor %}
+		html += '			</select>';
+		html += '		</div></td>';
+		html += '		<td class="left"><a onclick="$(\'#discount-row' + discount_row + '\').remove();return FALSE;" class="button">{{ button_remove|e('js') }}</a></td>';
+		html += '</tr>';
+
+		$('#discount tbody').append(html);
+
+		discount_row++;
+	}
+
+	
+
+	function simtariffs()
+	{
+		$.each( tariff_list, function( key, value ) {
+			if (value != null) {
+				$('.cdek-tariff').val(key).trigger('change');
+			}
+		});
+	}
+
+	$('.cdek-tariff').on('change', function(event){
+		event.preventDefault();
+
+		var tariff_id = $(this).val();
+		var tariff_name = $(".cdek-tariff option:selected").text();
+
+		if (tariff_id == 0) return;
+
+		var parent = $('#tab-tariff');
+
+		var option = $('select.cdek-tariff option[value=' + tariff_id + ']', parent);
+		var mode_id = $(option).attr('rel');
+
+		var sort_order = 0;
+
+		$('table.list tr', parent).each(function(){
+			var order = $('input.sort_order', this).val();
+			if (order > sort_order) {
+				sort_order = order;
+			}
+		});
+
+		sort_order++;
+
+		var html = '<tr id="tariff-' + tariff_row + '">';
+		html += '		<td class="left drag" width="1"><a title="{{ text_drag|e('js') }}">&nbsp;</a></td>';
+		html += '		<td class="left"><nobr>' + $(option).text() + '</nobr><span class="help"><b>{{ column_mode|e('js') }}</b>: ' + mode_list[mode_id] + '</span><input class="sort_order" type="hidden" name="cdek_customer_tariff_list[' + tariff_row + '][sort_order]" value="' + sort_order + '" /><input type="hidden" name="cdek_customer_tariff_list[' + tariff_row + '][tariff_id]" value="' + tariff_id + '" /><input type="hidden" name="cdek_customer_tariff_list[' + tariff_row + '][mode_id]" value="' + mode_id + '" /></td>';
+		html += '		<td class="left col-md-3 form-inline">';
+		{% for language in languages %}
+            html += '<div class="input-group">';
+                html += '<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name|e('js') }}" /></span>';
+                html += '<input type="text" class="form-control" name="cdek_customer_tariff_list[' + tariff_row + '][title][{{ language.language_id }}]" value="'+tariff_name+'" />';
+            html += '</div>';
+		{% endfor %}
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += ' 			<a href="#" onclick="$(\'#groupsBlock-'+ tariff_row +'\').toggle(); return false;">{{ column_customer_group|e('js') }}</a>';
+		html += '			<div class="scrollbox" id="groupsBlock-'+ tariff_row +'" style="display: none;">';
+		{% for customer_group in customer_groups %}
+            html += '			<div class="{{ cycle(['odd', 'even'], loop.index0) }}">';
+            html += '				<input type="checkbox" name="cdek_customer_tariff_list[' + tariff_row + '][customer_group_id][]" value="{{ customer_group.customer_group_id }}" />';
+            html += '				{{ customer_group.name|e('js') }}';
+            html += '			</div>';
+		{% endfor %}
+		html += '			</div>';
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += ' 			<a href="#" onclick="$(\'#geozoneBlock-'+ tariff_row +'\').toggle(); return false;">{{ column_geo_zone|e('js') }}</a>';
+		html += '			<div class="scrollbox" id="geozoneBlock-' + tariff_row + '" style="display: none;">';
+		{% for geo_zone in geo_zones %}
+            html += '				<div class="{{ cycle(['odd', 'even'], loop.index0) }}">';
+            html += '					<input type="checkbox" name="cdek_customer_tariff_list[' + tariff_row + '][geo_zone][]" value="{{ geo_zone.geo_zone_id }}" />';
+            html += '					{{ geo_zone.name|e('js') }}';
+            html += '				</div>';
+		{% endfor %}
+		html += '			</div>';
+		html += '		</td>';
+		html += '		<td class="left">';
+		html += ' 		<a href="#" onclick="$(\'#limitBlock-'+ tariff_row +'\').toggle(); return false;">{{ column_limit|e('js') }}</a>';
+		html += ' 		<div id="limitBlock-'+ tariff_row +'" style="display: none;">';
+		html += '			<table class="form limit">';
+		html += '				<tbody>';
+		html += '					<tr>';
+		html += '						<td><label for="cdek-customer-tariff-list-' + tariff_row + '-min-weight">{{ entry_min_weight|e('js') }}</label></td>';
+		html += '						<td><input id="cdek-customer-tariff-list-' + tariff_row + '-min-weight" type="text" name="cdek_customer_tariff_list[' + tariff_row + '][min_weight]" value="" size="3" /></td>';
+		html += '					</tr>';
+		html += '					<tr>';
+		html += '						<td><label for="cdek-customer-tariff-list-' + tariff_row + '-max-weight">{{ entry_max_weight|e('js') }}</label></td>';
+		html += '						<td><input id="cdek-customer-tariff-list-' + tariff_row + '-max-weight" type="text" name="cdek_customer_tariff_list[' + tariff_row + '][max_weight]" value="" size="3" /></td>';
+		html += '					</tr>';
+		html += '					<tr>';
+		html += '						<td><label for="cdek-customer-tariff-list-' + tariff_row + '-min-total">{{ entry_min_total|e('js') }}</label></td>';
+		html += '						<td><input id="cdek-customer-tariff-list-' + tariff_row + '-min-total" type="text" name="cdek_customer_tariff_list[' + tariff_row + '][min_total]" value="" size="3" /></td>';
+		html += '					</tr>';
+		html += '					<tr class="last">';
+		html += '						<td><label for="cdek-customer-tariff-list-' + tariff_row + '-max-total">{{ entry_max_total|e('js') }}</label></td>';
+		html += '						<td><input id="cdek-customer-tariff-list-' + tariff_row + '-max-total" type="text" name="cdek_customer_tariff_list[' + tariff_row + '][max_total]" value="" size="3" /></td>';
+		html += '					</tr>';
+		html += '				</tbody>';
+		html += '			</table>';
+		html += '		</div>';
+		html += '		</td>';
+		html += '		<td class="left"><a onclick="removeTariff(' + tariff_row + ');" class="button">{{ button_remove|e('js') }}</a></td>';
+		html += '</tr>';
+
+		$('table.list tbody:first', parent).append(html);
+
+		$('select.cdek-tariff option', parent).removeAttr('selected');
+
+		tariff_row++;
+	});
+
+	function removeTariff(tariff_row) {
+		$('#tariff-' + tariff_row).remove();
+		$('select.cdek-tariff option[value=' + tariff_row + ']').show();
+	}
+</script>
 {{ footer }}

@@ -3864,7 +3864,6 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
 
         if ($cityName) {
             $cdek_cities = $this->getInfo()->getCityByName($cityName);
-            return $cdek_cities;
         }
 
         if (isset($this->request->get['q'])) {
@@ -3875,8 +3874,21 @@ class ControllerExtensionModuleCdekIntegrator extends Controller
             $cityName = $this->request->get['search'];
         }
 
-        if ($cityName) {
+        if ($cityName && !$cdek_cities) {
             $cdek_cities = $this->getInfo()->getCityByName($cityName);
+        }
+
+        if ($cityName && !$cdek_cities) {
+            $this->load->model('extension/module/cdek_integrator');
+            $db_cities = $this->model_extension_module_cdek_integrator->getCity(utf8_strtolower($cityName));
+            foreach ($db_cities as $db_city) {
+                $cdek_cities[] = array(
+                    'code' => $db_city['id'],
+                    'full_name' => $db_city['name'],
+                    'city' => $db_city['cityName'],
+                    'region' => $db_city['regionName']
+                );
+            }
         }
 
         echo json_encode($cdek_cities);

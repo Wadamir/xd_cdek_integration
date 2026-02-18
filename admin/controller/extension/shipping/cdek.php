@@ -44,7 +44,26 @@ class ControllerExtensionShippingCdek extends Controller
 
             unset($this->request->post['apply']);
 
-            $this->model_setting_setting->editSetting('cdek', $this->request->post);
+            // Separate shipping settings from CDEK settings
+            $cdek_settings = $this->request->post;
+            $shipping_settings = array();
+
+            if (isset($cdek_settings['shipping_cdek_status'])) {
+                $shipping_settings['shipping_cdek_status'] = $cdek_settings['shipping_cdek_status'];
+                unset($cdek_settings['shipping_cdek_status']);
+            }
+
+            if (isset($cdek_settings['shipping_cdek_sort_order'])) {
+                $shipping_settings['shipping_cdek_sort_order'] = $cdek_settings['shipping_cdek_sort_order'];
+                unset($cdek_settings['shipping_cdek_sort_order']);
+            }
+
+            $this->model_setting_setting->editSetting('cdek', $cdek_settings);
+
+            // Save shipping settings with proper prefix if any exist
+            if (!empty($shipping_settings)) {
+                $this->model_setting_setting->editSetting('shipping_cdek', $shipping_settings);
+            }
 
             $this->saveTariffList();
 
@@ -407,12 +426,6 @@ class ControllerExtensionShippingCdek extends Controller
             $data['cdek_customer_group_id'] = $this->config->get('cdek_customer_group_id');
         }
 
-        if (isset($this->request->post['cdek_status'])) {
-            $data['cdek_status'] = $this->request->post['cdek_status'];
-        } else {
-            $data['cdek_status'] = $this->config->get('cdek_status');
-        }
-
         if (isset($this->request->post['cdek_period'])) {
             $data['cdek_period'] = $this->request->post['cdek_period'];
         } else {
@@ -515,12 +528,6 @@ class ControllerExtensionShippingCdek extends Controller
             $data['cdek_store'] = array();
         }
 
-        if (isset($this->request->post['cdek_sort_order'])) {
-            $data['cdek_sort_order'] = $this->request->post['cdek_sort_order'];
-        } else {
-            $data['cdek_sort_order'] = $this->config->get('cdek_sort_order');
-        }
-
         if (isset($this->request->post['cdek_packing_weight_class_id'])) {
             $data['cdek_packing_weight_class_id'] = $this->request->post['cdek_packing_weight_class_id'];
         } else {
@@ -571,6 +578,33 @@ class ControllerExtensionShippingCdek extends Controller
         } else {
             $data['cdek_empty'] = $this->config->get('cdek_empty');
         }
+
+
+        // if (isset($this->request->post['cdek_status'])) {
+        //     $data['cdek_status'] = $this->request->post['cdek_status'];
+        // } else {
+        //     $data['cdek_status'] = $this->config->get('cdek_status');
+        // }
+
+        // if (isset($this->request->post['cdek_sort_order'])) {
+        //     $data['cdek_sort_order'] = $this->request->post['cdek_sort_order'];
+        // } else {
+        //     $data['cdek_sort_order'] = $this->config->get('cdek_sort_order');
+        // }
+
+
+        if (isset($this->request->post['shipping_cdek_status'])) {
+            $data['shipping_cdek_status'] = $this->request->post['shipping_cdek_status'];
+        } else {
+            $data['shipping_cdek_status'] = $this->config->get('shipping_cdek_status');
+        }
+
+        if (isset($this->request->post['shipping_cdek_sort_order'])) {
+            $data['shipping_cdek_sort_order'] = $this->request->post['shipping_cdek_sort_order'];
+        } else {
+            $data['shipping_cdek_sort_order'] = $this->config->get('shipping_cdek_sort_order');
+        }
+
 
         $data['languages'] = $this->model_localisation_language->getLanguages();
         $data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();

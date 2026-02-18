@@ -1118,17 +1118,19 @@ class ModelExtensionModuleCdekIntegrator extends Model
 
         $this->db->query($sql);
 
-        $this->load->model('extension/event');
+        if (is_file(DIR_APPLICATION . 'model/setting/event.php')) {
+            $this->load->model('setting/event');
 
-        $this->model_extension_event->addEvent('cdek_shipping_add_scripts', 'catalog/controller/common/header/before', 'event/cdekshipping/addScripts');
+            $this->model_setting_event->addEvent('cdek_shipping_add_scripts', 'catalog/controller/common/header/before', 'event/cdekshipping/addScripts');
 
-        $this->model_extension_event->addEvent('cdek_shipping_success_order', 'catalog/controller/checkout/success/before', 'event/cdekshipping/successOrder');
+            $this->model_setting_event->addEvent('cdek_shipping_success_order', 'catalog/controller/checkout/success/before', 'event/cdekshipping/successOrder');
 
-        $this->model_extension_event->addEvent('cdek_shipping_order_create', 'catalog/model/checkout/order/addOrder/after', 'event/cdekshipping/orderCreate');
+            $this->model_setting_event->addEvent('cdek_shipping_order_create', 'catalog/model/checkout/order/addOrder/after', 'event/cdekshipping/orderCreate');
 
-        $this->model_extension_event->addEvent('cdek_shipping_order_history', 'catalog/model/checkout/order/addOrderHistory/before', 'event/cdekshipping/orderHistory');
+            $this->model_setting_event->addEvent('cdek_shipping_order_history', 'catalog/model/checkout/order/addOrderHistory/before', 'event/cdekshipping/orderHistory');
 
-        $this->model_extension_event->addEvent('cdek_shipping_check_tariff_pvz', 'catalog/controller/checkout/shipping_method/save/before', 'event/cdekshipping/checkTariffPvz');
+            $this->model_setting_event->addEvent('cdek_shipping_check_tariff_pvz', 'catalog/controller/checkout/shipping_method/save/before', 'event/cdekshipping/checkTariffPvz');
+        }
     }
 
     public function deleteCities()
@@ -1175,13 +1177,15 @@ class ModelExtensionModuleCdekIntegrator extends Model
 
         $this->db->query($sql);
 
-        $this->load->model('extension/event');
+        if (is_file(DIR_APPLICATION . 'model/setting/event.php')) {
+            $this->load->model('setting/event');
 
-        $this->model_extension_event->deleteEvent('cdek_shipping_add_scripts');
-        $this->model_extension_event->deleteEvent('cdek_shipping_success_order');
-        $this->model_extension_event->deleteEvent('cdek_shipping_order_create');
-        $this->model_extension_event->deleteEvent('cdek_shipping_order_history');
-        $this->model_extension_event->deleteEvent('cdek_shipping_check_tariff_pvz');
+            $this->model_setting_event->deleteEventByCode('cdek_shipping_add_scripts');
+            $this->model_setting_event->deleteEventByCode('cdek_shipping_success_order');
+            $this->model_setting_event->deleteEventByCode('cdek_shipping_order_create');
+            $this->model_setting_event->deleteEventByCode('cdek_shipping_order_history');
+            $this->model_setting_event->deleteEventByCode('cdek_shipping_check_tariff_pvz');
+        }
     }
 
     public function getDispatchToSync()

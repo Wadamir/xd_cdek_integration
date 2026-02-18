@@ -13,6 +13,7 @@
 			</tr>
 		</thead>
 		<tbody>
+            {% set discount_row_number = 0 %}
 			{% if cdek_discounts %}
 				{% for discount_row, discount in cdek_discounts %}
 					<tr id="discount-row{{ discount_row }}">
@@ -84,9 +85,13 @@
 						</td>
 						<td class="left"><a onclick="$('#discount-row{{ discount_row }}').remove();return FALSE;" class="button">{{ button_remove }}</a></td>
 					</tr>
+                    {% set discount_row_number = discount_row + 1 %}
 				{% endfor %}
 			{% endif %}
 		</tbody>
 	</table>
 	<a class="button" onclick="addDiscount();">{{ button_add_discount }}</a>
 </div>
+<script>
+    var discount_row = {{ discount_row_number }};
+</script>
